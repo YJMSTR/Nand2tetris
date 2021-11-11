@@ -248,43 +248,228 @@ CHIP DMux4Way {
 #### DMux8Way
 
 ```
-// This file is part of www.nand2tetris.org// and the book "The Elements of Computing Systems"// by Nisan and Schocken, MIT Press.// File name: projects/01/DMux8Way.hdl/** * 8-way demultiplexor: * {a, b, c, d, e, f, g, h} = {in, 0, 0, 0, 0, 0, 0, 0} if sel == 000 *                            {0, in, 0, 0, 0, 0, 0, 0} if sel == 001 *                            etc. *                            {0, 0, 0, 0, 0, 0, 0, in} if sel == 111 */CHIP DMux8Way {    IN in, sel[3];    OUT a, b, c, d, e, f, g, h;    PARTS:    // Put your code here:    Not(in = sel[0], out = n0);    Not(in = sel[1], out = n1);    Not(in = sel[2], out = n2);    And(a = n1, b = n0, out = n00);    And(a = n1, b = sel[0], out = n01);    And(a = sel[1], b = n0, out = n10);    And(a = sel[1], b = sel[0], out = n11);    And(a = n2, b = n00, out = n000);    And(a = n2, b = n01, out = n001);    And(a = n2, b = n10, out = n010);    And(a = n2, b = n11, out = n011);    And(a = sel[2], b = n00, out = n100);    And(a = sel[2], b = n01, out = n101);    And(a = sel[2], b = n10, out = n110);    And(a = sel[2], b = n11, out = n111);    And(a = in, b = n000, out = a);    And(a = in, b = n001, out = b);    And(a = in, b = n010, out = c);    And(a = in, b = n011, out = d);    And(a = in, b = n100, out = e);    And(a = in, b = n101, out = f);    And(a = in, b = n110, out = g);    And(a = in, b = n111, out = h);}
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/DMux8Way.hdl
+/** 
+* 8-way demultiplexor: 
+* {a, b, c, d, e, f, g, h} = {in, 0, 0, 0, 0, 0, 0, 0} if sel == 000 
+*                            {0, in, 0, 0, 0, 0, 0, 0} if sel == 001 
+*                            etc. *                            {0, 0, 0, 0, 0, 0, 0, in} if sel == 111 */
+CHIP DMux8Way {    
+	IN in, sel[3];
+    OUT a, b, c, d, e, f, g, h;
+    PARTS:    
+    // Put your code here:
+    Not(in = sel[0], out = n0);
+    Not(in = sel[1], out = n1);
+    Not(in = sel[2], out = n2);
+    And(a = n1, b = n0, out = n00);
+    And(a = n1, b = sel[0], out = n01);
+    And(a = sel[1], b = n0, out = n10);
+    And(a = sel[1], b = sel[0], out = n11);
+    And(a = n2, b = n00, out = n000);
+    And(a = n2, b = n01, out = n001);
+    And(a = n2, b = n10, out = n010);
+    And(a = n2, b = n11, out = n011);
+    And(a = sel[2], b = n00, out = n100);
+    And(a = sel[2], b = n01, out = n101);
+    And(a = sel[2], b = n10, out = n110);
+    And(a = sel[2], b = n11, out = n111);
+    And(a = in, b = n000, out = a);
+    And(a = in, b = n001, out = b);
+    And(a = in, b = n010, out = c);
+    And(a = in, b = n011, out = d);
+    And(a = in, b = n100, out = e);
+    And(a = in, b = n101, out = f);
+    And(a = in, b = n110, out = g);
+    And(a = in, b = n111, out = h);
+}
 ```
 
 #### Mux16
 
-```
-// This file is part of www.nand2tetris.org// and the book "The Elements of Computing Systems"// by Nisan and Schocken, MIT Press.// File name: projects/01/Mux16.hdl/** * 16-bit multiplexor:  * for i = 0..15 out[i] = a[i] if sel == 0  *                        b[i] if sel == 1 */CHIP Mux16 {    IN a[16], b[16], sel;    OUT out[16];    PARTS:    // Put your code here:    Mux(a=a[0], b=b[0], sel=sel, out=out[0]);    Mux(a=a[1], b=b[1], sel=sel, out=out[1]);    Mux(a=a[2], b=b[2], sel=sel, out=out[2]);    Mux(a=a[3], b=b[3], sel=sel, out=out[3]);    Mux(a=a[4], b=b[4], sel=sel, out=out[4]);    Mux(a=a[5], b=b[5], sel=sel, out=out[5]);    Mux(a=a[6], b=b[6], sel=sel, out=out[6]);    Mux(a=a[7], b=b[7], sel=sel, out=out[7]);    Mux(a=a[8], b=b[8], sel=sel, out=out[8]);    Mux(a=a[9], b=b[9], sel=sel, out=out[9]);    Mux(a=a[10], b=b[10], sel=sel, out=out[10]);    Mux(a=a[11], b=b[11], sel=sel, out=out[11]);    Mux(a=a[12], b=b[12], sel=sel, out=out[12]);    Mux(a=a[13], b=b[13], sel=sel, out=out[13]);    Mux(a=a[14], b=b[14], sel=sel, out=out[14]);    Mux(a=a[15], b=b[15], sel=sel, out=out[15]);}
+```HDL
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Mux16.hdl
+/** 
+* 16-bit multiplexor:  
+* for i = 0..15 out[i] = a[i] if sel == 0  
+*                        b[i] if sel == 1 
+*/
+CHIP Mux16 {    
+	IN a[16], b[16], sel;
+    OUT out[16];
+    PARTS:    
+    // Put your code here:
+    Mux(a=a[0], b=b[0], sel=sel, out=out[0]);
+    Mux(a=a[1], b=b[1], sel=sel, out=out[1]);
+    Mux(a=a[2], b=b[2], sel=sel, out=out[2]);
+    Mux(a=a[3], b=b[3], sel=sel, out=out[3]);
+    Mux(a=a[4], b=b[4], sel=sel, out=out[4]);
+    Mux(a=a[5], b=b[5], sel=sel, out=out[5]);
+    Mux(a=a[6], b=b[6], sel=sel, out=out[6]);    
+    Mux(a=a[7], b=b[7], sel=sel, out=out[7]);    
+    Mux(a=a[8], b=b[8], sel=sel, out=out[8]);   
+    Mux(a=a[9], b=b[9], sel=sel, out=out[9]);
+    Mux(a=a[10], b=b[10], sel=sel, out=out[10]);   
+    Mux(a=a[11], b=b[11], sel=sel, out=out[11]);  
+    Mux(a=a[12], b=b[12], sel=sel, out=out[12]);  
+    Mux(a=a[13], b=b[13], sel=sel, out=out[13]); 
+    Mux(a=a[14], b=b[14], sel=sel, out=out[14]);    
+    Mux(a=a[15], b=b[15], sel=sel, out=out[15]);
+}
 ```
 
 #### Mux4Way16
 
-```
-// This file is part of www.nand2tetris.org// and the book "The Elements of Computing Systems"// by Nisan and Schocken, MIT Press.// File name: projects/01/Mux4Way16.hdl/** * 4-way 16-bit multiplexor: * out = a if sel == 00 *       b if sel == 01 *       c if sel == 10 *       d if sel == 11 */CHIP Mux4Way16 {    IN a[16], b[16], c[16], d[16], sel[2];    OUT out[16];    PARTS:    // Put your code here:    Mux16(a = a, b = b, sel = sel[0], out = ab);    Mux16(a = c, b = d, sel = sel[0], out = cd);    Mux16(a = ab, b = cd, sel = sel[1], out = out);}
+```HDL
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Mux4Way16.hdl
+/** 
+* 4-way 16-bit multiplexor: 
+* out = a if sel == 00 
+*       b if sel == 01 
+*       c if sel == 10 
+*       d if sel == 11 
+*/
+CHIP Mux4Way16 {
+	IN a[16], b[16], c[16], d[16], sel[2];    
+	OUT out[16];    
+	PARTS:    
+	// Put your code here:
+    Mux16(a = a, b = b, sel = sel[0], out = ab);
+    Mux16(a = c, b = d, sel = sel[0], out = cd); 
+    Mux16(a = ab, b = cd, sel = sel[1], out = out);
+}
 ```
 
 #### Mux8Way16
 
-```
-// This file is part of www.nand2tetris.org// and the book "The Elements of Computing Systems"// by Nisan and Schocken, MIT Press.// File name: projects/01/Mux8Way16.hdl/** * 8-way 16-bit multiplexor: * out = a if sel == 000 *       b if sel == 001 *       etc. *       h if sel == 111 */CHIP Mux8Way16 {    IN a[16], b[16], c[16], d[16],       e[16], f[16], g[16], h[16],       sel[3];    OUT out[16];    PARTS:    // Put your code here:    Mux4Way16(a = a, b = b, c = c, d = d, sel = sel[0..1], out = c1);    Mux4Way16(a = e, b = f, c = g, d = h, sel = sel[0..1], out = c2);    Mux16(a = c1, b = c2, sel = sel[2], out = out);}
+```HDL
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Mux8Way16.hdl
+/** 
+* 8-way 16-bit multiplexor: 
+* out = a if sel == 000 
+* b if sel == 001 
+*       etc. 
+*       h if sel == 111 
+*/
+CHIP Mux8Way16 {    
+	IN a[16], b[16], c[16], d[16],  	
+	e[16], f[16], g[16], h[16],  
+    sel[3];   
+    OUT out[16]; 
+    PARTS:    
+    // Put your code here:
+    Mux4Way16(a = a, b = b, c = c, d = d, sel = sel[0..1], out = c1); 
+    Mux4Way16(a = e, b = f, c = g, d = h, sel = sel[0..1], out = c2);
+    Mux16(a = c1, b = c2, sel = sel[2], out = out);
+}
 ```
 
 #### Not16
 
-```
-// This file is part of www.nand2tetris.org// and the book "The Elements of Computing Systems"// by Nisan and Schocken, MIT Press.// File name: projects/01/Not16.hdl/** * 16-bit Not: * for i=0..15: out[i] = not in[i] */CHIP Not16 {    IN in[16];    OUT out[16];    PARTS:    // Put your code here:    Nand(a=in[0], b=in[0], out=out[0]);    Nand(a=in[1], b=in[1], out=out[1]);    Nand(a=in[2], b=in[2], out=out[2]);    Nand(a=in[3], b=in[3], out=out[3]);    Nand(a=in[4], b=in[4], out=out[4]);    Nand(a=in[5], b=in[5], out=out[5]);    Nand(a=in[6], b=in[6], out=out[6]);    Nand(a=in[7], b=in[7], out=out[7]);    Nand(a=in[8], b=in[8], out=out[8]);    Nand(a=in[9], b=in[9], out=out[9]);    Nand(a=in[10], b=in[10], out=out[10]);    Nand(a=in[11], b=in[11], out=out[11]);    Nand(a=in[12], b=in[12], out=out[12]);    Nand(a=in[13], b=in[13], out=out[13]);    Nand(a=in[14], b=in[14], out=out[14]);    Nand(a=in[15], b=in[15], out=out[15]);}
+```HDL
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Not16.hdl
+/** 
+* 16-bit Not: 
+* for i=0..15: out[i] = not in[i] 
+*/
+CHIP Not16 { 
+	IN in[16];
+    OUT out[16];
+    PARTS:   
+    // Put your code here:
+    Nand(a=in[0], b=in[0], out=out[0]);    
+    Nand(a=in[1], b=in[1], out=out[1]);  
+    Nand(a=in[2], b=in[2], out=out[2]);   
+    Nand(a=in[3], b=in[3], out=out[3]);  
+    Nand(a=in[4], b=in[4], out=out[4]);   
+    Nand(a=in[5], b=in[5], out=out[5]);   
+    Nand(a=in[6], b=in[6], out=out[6]);  
+    Nand(a=in[7], b=in[7], out=out[7]);    
+    Nand(a=in[8], b=in[8], out=out[8]);    
+    Nand(a=in[9], b=in[9], out=out[9]);    
+    Nand(a=in[10], b=in[10], out=out[10]);    
+    Nand(a=in[11], b=in[11], out=out[11]);    
+    Nand(a=in[12], b=in[12], out=out[12]);    
+    Nand(a=in[13], b=in[13], out=out[13]);    
+    Nand(a=in[14], b=in[14], out=out[14]);    
+    Nand(a=in[15], b=in[15], out=out[15]);
+}
 ```
 
 #### Or8Way
 
-```
-// This file is part of www.nand2tetris.org// and the book "The Elements of Computing Systems"// by Nisan and Schocken, MIT Press.// File name: projects/01/Or8Way.hdl/** * 8-way Or:  * out = (in[0] or in[1] or ... or in[7]) */CHIP Or8Way {    IN in[8];    OUT out;    PARTS:    // Put your code here:    Or(a = in[0], b = in[1], out = c1);    Or(a = c1, b = in[2], out = c2);    Or(a = c2, b = in[3], out = c3);    Or(a = c3, b = in[4], out = c4);    Or(a = c4, b = in[5], out = c5);    Or(a = c5, b = in[6], out = c6);    Or(a = c6, b = in[7], out = out);}
+```HDL
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Or8Way.hdl
+/** 
+* 8-way Or:  
+* out = (in[0] or in[1] or ... or in[7]) 
+*/
+CHIP Or8Way {
+	IN in[8];  
+    OUT out;    
+    PARTS:    
+    // Put your code here:   
+    Or(a = in[0], b = in[1], out = c1);    
+    Or(a = c1, b = in[2], out = c2);   
+    Or(a = c2, b = in[3], out = c3);    
+    Or(a = c3, b = in[4], out = c4);   
+    Or(a = c4, b = in[5], out = c5);   
+    Or(a = c5, b = in[6], out = c6);   
+    Or(a = c6, b = in[7], out = out);
+}
 ```
 
 #### Or16
 
-```
-// This file is part of www.nand2tetris.org// and the book "The Elements of Computing Systems"// by Nisan and Schocken, MIT Press.// File name: projects/01/Or16.hdl/** * 16-bit bitwise Or: * for i = 0..15 out[i] = (a[i] or b[i]) */CHIP Or16 {    IN a[16], b[16];    OUT out[16];    PARTS:    // Put your code here:    Or(a=a[0], b=b[0], out=out[0]);    Or(a=a[1], b=b[1], out=out[1]);    Or(a=a[2], b=b[2], out=out[2]);    Or(a=a[3], b=b[3], out=out[3]);    Or(a=a[4], b=b[4], out=out[4]);    Or(a=a[5], b=b[5], out=out[5]);    Or(a=a[6], b=b[6], out=out[6]);    Or(a=a[7], b=b[7], out=out[7]);    Or(a=a[8], b=b[8], out=out[8]);    Or(a=a[9], b=b[9], out=out[9]);    Or(a=a[10], b=b[10], out=out[10]);    Or(a=a[11], b=b[11], out=out[11]);    Or(a=a[12], b=b[12], out=out[12]);    Or(a=a[13], b=b[13], out=out[13]);    Or(a=a[14], b=b[14], out=out[14]);    Or(a=a[15], b=b[15], out=out[15]);}
+```HDL
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/01/Or16.hdl
+/** 
+* 16-bit bitwise Or: 
+* for i = 0..15 out[i] = (a[i] or b[i]) 
+*/
+CHIP Or16 {  
+	IN a[16], b[16];
+    OUT out[16];    
+    PARTS:    
+    // Put your code here:
+    Or(a=a[0], b=b[0], out=out[0]);
+    Or(a=a[1], b=b[1], out=out[1]);  
+    Or(a=a[2], b=b[2], out=out[2]);
+    Or(a=a[3], b=b[3], out=out[3]);
+    Or(a=a[4], b=b[4], out=out[4]); 
+    Or(a=a[5], b=b[5], out=out[5]);
+    Or(a=a[6], b=b[6], out=out[6]);
+    Or(a=a[7], b=b[7], out=out[7]);   
+    Or(a=a[8], b=b[8], out=out[8]);  
+    Or(a=a[9], b=b[9], out=out[9]);
+    Or(a=a[10], b=b[10], out=out[10]);    
+    Or(a=a[11], b=b[11], out=out[11]);    
+    Or(a=a[12], b=b[12], out=out[12]);    
+    Or(a=a[13], b=b[13], out=out[13]);   
+    Or(a=a[14], b=b[14], out=out[14]);    
+    Or(a=a[15], b=b[15], out=out[15]);
+ }
 ```
 
 ## 第二周：Boolean Arithmetic and the ALU
