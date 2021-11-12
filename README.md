@@ -1,3 +1,4 @@
+````HDL
 coursera上有part1的课程，但都是英文
 
 配套的中文书籍可以在z-lib上找到，名为《计算机系统要素》
@@ -6,6 +7,7 @@ coursera上有part1的课程，但都是英文
 配套的文件可以在Nand2tetris官网找到
 
 vscode甚至有专门为这门课的HDL做的代码高亮拓展
+由于本人是在两台电脑上做的这个作业，并且一开始没有用git,上面文件夹中的代码可能不完整，但readme中包含了所有的已经写了的代码。
 
 ## 第一周 Module 1: Boolean Functions and Gate Logic Roadmap
 
@@ -1438,4 +1440,5 @@ CHIP Computer {
     CPU(inM = inM, instruction = instruction, reset = reset, outM = outM, writeM = writeM, addressM = addressM, pc = pc);
 }
 
-```
+```xxxxxxxxxx // This file is part of www.nand2tetris.org// and the book "The Elements of Computing Systems"// by Nisan and Schocken, MIT Press.// File name: projects/05/Computer.hdl/** * The HACK computer, including CPU, ROM and RAM. * When reset is 0, the program stored in the computer's ROM executes. * When reset is 1, the execution of the program restarts.  * Thus, to start a program's execution, reset must be pushed "up" (1) * and "down" (0). From this point onward the user is at the mercy of  * the software. In particular, depending on the program's code, the  * screen may show some output and the user may be able to interact  * with the computer via the keyboard. */CHIP Computer {    IN reset;    PARTS:    // Put your code here:    ROM32K(address = pc, out = instruction);    Memory(in = outM, load = writeM, address = addressM, out = inM);    CPU(inM = inM, instruction = instruction, reset = reset, outM = outM, writeM = writeM, addressM = addressM, pc = pc);}HDL
+````
