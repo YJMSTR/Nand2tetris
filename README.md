@@ -1297,7 +1297,7 @@ A指令不需要ALU参与运算，并且没有用上inM里的数据，只需要�
 
 A寄存器和D寄存器有对应的内建芯片ARegister和DRegister，直接调用即可
 
-而C指令的jump逻辑需要依靠PC和ALU输出的ng和zr来确定。$j1\&ng,j2\&zr, j3\&(!(ng\&zr))$​或起来为1即跳转。jump操作即为让PC从A寄存器中接受数据​（跳到A指向的位置去）
+而C指令的jump逻辑需要依靠PC和ALU输出的ng和zr来确定。$j1\&ng,j2\&zr, j3\&(!(ng\&zr))$或起来为1即跳转。jump操作即为让PC从A寄存器中接受数据（跳到A指向的位置去）
 
 dest对应d位域的值可以参考书P68的
 
@@ -1439,4 +1439,3 @@ CHIP Computer {
 }
 
 ```
-
