@@ -209,3 +209,7 @@ class Code {
             return jumpRes[jumpIn];
         }
 }
+int main() {
+    Praser praser = new Praser();
+    Code code = new Code();
+}
