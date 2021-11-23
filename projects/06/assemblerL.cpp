@@ -1,48 +1,8 @@
-﻿#include<bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
-class SymbolTable {
-    public:
-        map<string, int> symbolTable;
-        int tot = 16, cnt = 0;
-        void init() {
-            addEntry("SP", 0);
-            addEntry("LCL", 1);
-            addEntry("ARG", 2);
-            addEntry("THIS", 3);
-            addEntry("THAT", 4);
-            addEntry("R0", 0);
-            addEntry("R1", 1);
-            addEntry("R2", 2);
-            addEntry("R3", 3);
-            addEntry("R4", 4);
-            addEntry("R5", 5);
-            addEntry("R6", 6);
-            addEntry("R7", 7);
-            addEntry("R8", 8);
-            addEntry("R9", 9);
-            addEntry("R10", 10);
-            addEntry("R11", 11);
-            addEntry("R12", 12);
-            addEntry("R13", 13);
-            addEntry("R14", 14);
-            addEntry("R15", 15);
-            addEntry("SCREEN", 16384);
-            addEntry("KBD", 24576);
-        }
-        void addEntry(const string& symbol, int address) {
-            symbolTable[symbol] = address;
-        }
-        bool contains(const string& symbol) {
-            return symbolTable.count(symbol);
-        }
-        int GetAddress(const string& symbol) {
-            return symbolTable[symbol];
-        }
-};
 class Praser {
     public:
         string command;
-        queue<string> inputs;
         bool hasMoreCommands() {
             //输入中是否还有更多命令
             advance();
@@ -52,29 +12,20 @@ class Praser {
         }
         void advance() {
            //读取下一条命令 将其当作“当前命令”
-            if (inputs.empty()) {
-                command[0] = EOF;
-                return;
-            }
-            command = inputs.front();
-            inputs.pop();
+            getline(cin, command);
             if (command[0] == EOF) 
                 return;
             int len = command.length();
-            bool isNotEmpty = false, isNotComment = true;
+            bool isNotEmpty = false;
             for (int i = 0; i < len; i++) {
-                if (i < len - 1) {
-                    if (command[i] == '/' && command[i+1] == '/') {
-                        isNotComment = false;
-                        if (!isNotEmpty) {
-                            advance();
-                            return;
-                        }
-                        break;
-                    }
-                }
                 if (command[i] != ' ') 
                     isNotEmpty = true;
+                if (i < len - 1) {
+                    if (command[i] == '/' && command[i+1] == '/') {
+                        advance();
+                        return;
+                    }
+                }
             }
             if (!isNotEmpty) {
                 advance();
@@ -82,20 +33,20 @@ class Praser {
             }
         }
         char commandType() {
-            //返回当前命令的类型 A指令 返回'A' C指令返回'C' (Xxx)返回'L'
+            //返回当前命令的类型 A指令 返回'A' C指令返回'C' {Xxx}返回'L'
             for (int i = 0; i < command.length(); i++) {
                 if (command[i] != ' ') {
-                    return (command[i] == '@' ? 'A' : (command[i] == '(' ? 'L' : 'C'));
+                    return (command[i] == '@' ? 'A' : (command[i] == '{' ? 'L' : 'C'));
                 }
             }
             return '\0';
         }
         string symbol() {
-            //返回形如@Xxx 或(Xxx)的当前命令的符号或十进制数值
+            //返回形如@Xxx 或{Xxx}的当前命令的符号或十进制数值
             //仅当commandType()是A
             string symbolRes = "";
             for (int i = 0; i < command.length(); i++) {
-                if (command[i] != ' ' && command[i] != '(' && command[i] != ')' && command[i] != '@') {
+                if (command[i] != ' ' && command[i] != '{' && command[i] != '}' && command[i] != '@') {
                     symbolRes += command[i];
                 } 
             }
@@ -126,7 +77,6 @@ class Praser {
                     }
                 }
             }
-            //if (dest)
             return destRes;
         }
         string comp() {
@@ -233,11 +183,11 @@ class Praser {
             return jumpRes;
         }
 };
-
 class Code {
+    private:
+        map<string, string> destRes, compRes, jumpRes;
     public:
         //注意遍历这个map的时候要用引用以免复制一遍
-        map<string, string> destRes, compRes, jumpRes;
         void init() {
             destRes[""] = "000";
             destRes["M"] = "001";
@@ -305,71 +255,18 @@ int main() {
     Code code;
     SymbolTable symboltable;
     code.init();
-    symboltable.init();
-    string tmp;
-    queue<string> inputs;
-    while (getline(cin, tmp)) {
-        praser.inputs.push(tmp);
-        inputs.push(tmp);
-    }
-    while (praser.hasMoreCommands()) {
-        char commandType = praser.commandType();
-        if (commandType != 'L') {
-            symboltable.cnt++;
-        } else {
-            string symbol = praser.symbol();
-            symboltable.addEntry(symbol, symboltable.cnt);
-        }
-    }
-    praser.inputs = inputs;
-    while (praser.hasMoreCommands()) {
-        char commandType = praser.commandType();
-        if (commandType == 'A') {
-            string Avalue = praser.symbol();
-            //int AintValue = 0;
-            bool isInt = true;
-            for (int i = 0; i < Avalue.length(); i++) {
-                //AintValue = AintValue * 10 + Avalue[i] - '0';
-                if (!isdigit(Avalue[i])) {
-                    isInt = false;
-                    break;
-                }
-            }
-            if (!isInt) {
-                if (!symboltable.contains(Avalue)) {
-                    symboltable.addEntry(Avalue, symboltable.tot++);
-                }
-            }
-        }
-    }
     bool flag = 0;
-    praser.inputs = inputs;
-    int cnt = 0;
     while(praser.hasMoreCommands()) {
-        //cout << "++cnt = " << ++cnt << "\n";
         if (flag) {
             cout << "\n";
         } else flag = 1;
         string output = "";
         char commandType = praser.commandType();
-        //cout << "commandT = " << commandType << "\n";
         if (commandType == 'A') {
             string Avalue = praser.symbol();
             int AintValue = 0;
-            bool isInt = true;
             for (int i = 0; i < Avalue.length(); i++) {
                 AintValue = AintValue * 10 + Avalue[i] - '0';
-                if (!isdigit(Avalue[i])) {
-                    isInt = false;
-                    break;
-                }
-            }
-            if (!isInt) {
-                if (!symboltable.contains(Avalue)) {
-                    symboltable.addEntry(Avalue, symboltable.tot++);
-                }
-                AintValue = symboltable.GetAddress(Avalue);
-                //printf("Aintvalue = %d\n", AintValue);
             }
             for (int i = 15; i > 0; i--) {
                 output = output + ((AintValue & 1) ? '1' : '0');
@@ -382,10 +279,6 @@ int main() {
             output += code.comp(praser.comp());
             output += code.dest(praser.dest());
             output += code.jump(praser.jump());
-            //cout << "output == " << output << endl;
-        } else if (commandType == 'L') {
-            flag = 0;   
-            //没有输出 不要输出换行符
         }
         cout << output;
     }
