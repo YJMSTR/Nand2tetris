@@ -1,20 +1,19 @@
 #include<bits/stdc++.h>
 using namespace std;
 class Praser {
-
     public:
         string command;
         bool hasMoreCommands() {
             //输入中是否还有更多命令
             advance();
-            if (command == EOF) 
+            if (command[0] == EOF) 
                 return false;
             return true;
         }
         void advance() {
            //读取下一条命令 将其当作“当前命令”
             getline(cin, command);
-            if (command == EOF) 
+            if (command[0] == EOF) 
                 return;
             int len = command.length();
             bool isNotEmpty = false;
@@ -40,11 +39,12 @@ class Praser {
                     return (command[i] == '@' ? 'A' : (command[i] == '{' ? 'L' : 'C'));
                 }
             }
+            return '\0';
         }
         string symbol() {
             //返回形如@Xxx 或{Xxx}的当前命令的符号或十进制数值
             //仅当commandType()是A
-            string symbolRes = '';
+            string symbolRes = "";
             for (int i = 0; i < command.length(); i++) {
                 if (command[i] != ' ' && command[i] != '{' && command[i] != '}' && command[i] != '@') {
                     symbolRes += command[i];
@@ -55,97 +55,134 @@ class Praser {
         string dest() { 
             //返回当前C指令的dest
             //仅当commandType()是C时才能调用
-            int cntop = 0;
-            string destRes = '';
+            int cntop = 0, cnteq = 0;
+            string destRes = "";
             for (int i = 0; i < command.length(); i++) {
-                if (command[i] == ';' || command[i] == '=') 
+                if (command[i] == ';') 
                     cntop++;
+                if (command[i] == '=') 
+                    cnteq++;
                 if (i < command.length() - 1 && command[i] == '/' && command[i+1] == '/') 
                     break;  //之后如果有符号也是注释里的
             }
-            if (cntop < 2)  //没有dest域
+            if (cnteq != 1)  //没有dest域 形如JMP
                 return "";  
             else {
                 //如果有dest域就一定有'=',把读到等号之前的所有非空格处理出来即可。
                 for (int i = 0; i < command.length(); i++) {
                     if (command[i] == '=') 
-                        return destRes;
+                        break;
                     else if (command[i] != ' ') {
                         destRes += command[i];
                     }
                 }
             }
-            return '';
+            return destRes;
         }
         string comp() {
             //返回当前C指令的comp
             //仅当commandType()是C时才能调用
-            int cntop = 0;
-            string compRes = '';
+            //comp不会为空
+            int cntop = 0, cnteq = 0;
+            string compRes = "";
             for (int i = 0; i < command.length(); i++) {
-                if (command[i] == ';' || command[i] == '=') 
+                if (command[i] == ';') 
                     cntop++;
+                if (command[i] == '=') 
+                    cnteq++;
                 if (i < command.length() - 1 && command[i] == '/' && command[i+1] == '/') 
                     break;  //之后如果有符号也是注释里的
             }
-            if (cntop < 2)  //没有comp域
-                return "";  
-            bool isComp = false;
-            else {
-                for (int i = 0; i < command.length(); i++) {
-                    if (command[i] == '=') {
-                        isComp = true;
+            if (cnteq == 0)  { //没有dest
+                if (cntop == 0) {
+                    for (int i = 0; i < command.length(); i++) {
+                        if (i < command.length() - 1 && command[i] == '/' && command[i+1] == '/') 
+                            break;  //之后如果有符号也是注释里的
+                        if (command[i] != ' ') {
+                            compRes += command[i];
+                        }
+                    } 
+                } else {
+                    for (int i = 0; i < command.length(); i++) {//如果有jump
+                        if (command[i] == ';') 
+                            break;
+                        if (command[i] != ' ') {
+                            compRes += command[i];
+                        }
+                    } 
+                }
+            } else {    //有dest 讨论有没有jump
+                if (cntop == 1) {
+                    bool isComp = false;
+                    for (int i = 0; i < command.length(); i++) {
+                        if (command[i] == '=') {
+                            isComp = true;
+                            continue;
+                        }
+                        if (isComp && command[i] == ';')    //注释只会在行末 不会被读到
+                            break;
+                        if (isComp && command[i] != ' ') {
+                            compRes += command[i];
+                        }
                     }
-                    if (isComp && command[i] == ';')    //注释只会在行末 不会被读到
-                        return compRes;
-                    if (isComp && command[i] != ' ' && command[i] != '=') {
-                        compRes += command[i];
+                } else {
+                    bool isComp = false;
+                    for (int i = 0; i < command.length(); i++) {
+                        if (command[i] == '=') {
+                            isComp = true;
+                            continue;
+                        }
+                        if (i < command.length() - 1 && command[i] == '/' && command[i+1] == '/') 
+                            break;  //之后如果有符号也是注释里的
+                        if (isComp && command[i] != ' ') {
+                            compRes += command[i];
+                        }
                     }
                 }
             }
-            return '';
+            return compRes;
         }
         string jump() {
             //返回当前C指令的jump
             //仅当commandType()是C时才能调用
             //jump读入时要识别一下注释
-            int cntop = 0;
-            string jumpRes = '';
+            int cnteq = 0, cntop = 0;
+            string jumpRes = "";
             for (int i = 0; i < command.length(); i++) {
-                if (command[i] == ';' || command[i] == '=') 
+                if (command[i] == '=') 
+                    cnteq++;
+                if (command[i] == ';')
                     cntop++;
                 if (i < command.length() - 1 && command[i] == '/' && command[i+1] == '/') 
                     break;  //之后如果有符号也是注释里的
             }
-            if (cntop == 2)  //没有jump
+            if (cnteq == 1 && cntop == 0)  //没有jump
                 return "";  
-            if (cntop == 1) {
-                //只有jump
+            if (cnteq == 0 && cntop == 0) {
+                //只有jump 
                 for (int i = 0; i < command.length(); i++) {
-                    if (command[i] == ';') 
-                        return jumpRes;
+                    if (i < command.length() - 1 && command[i] == '/' && command[i+1] == '/') 
+                        return jumpRes;  //之后如果有符号也是注释里的
                     if (command[i] != ' ')
                         jumpRes += command[i];
                 }
-            } else if (cntop == 3) {
+            } else if (cntop == 1) {
                 bool isJump = false;
                 for (int i = 0; i < command.length(); i++) {
+                    if (i < command.length() - 1 && command[i] == '/' && command[i+1] == '/') 
+                        break;  //之后如果有符号也是注释里的
                     if (command[i] == ';') {
-                        if (isJump) 
-                            return jumpRes;
-                        else {
-                            isJump = true;
-                            continue;
-                        }
+                        isJump = true;
+                        continue;
                     } 
-                    if (command[i] != ' ') {
+                    if (isJump && command[i] != ' ') {
                         jumpRes += command[i];
                     }
                 }
-            }
-            return '';
+            } 
+            return jumpRes;
         }
-}
+};
 class Code {
     private:
         map<string, string> destRes, compRes, jumpRes;
@@ -199,17 +236,48 @@ class Code {
         }
         string dest(string destIn) {
             //返回dest对应的3位二进制码
+            //cout << "destIn == " << destIn << " destRes == " << destRes[destIn] << "\n";
             return destRes[destIn];
         }
         string comp(string compIn) {
             //返回comp对应的7位二进制码
+            //cout << "compIn == " << compIn << " compRes == " << compRes[compIn] << "\n";
             return compRes[compIn];
         }
         string jump(string jumpIn) {
+            //cout << "jumpIn == " << jumpIn << " jumpRes == " << jumpRes[jumpIn] << "\n";
             return jumpRes[jumpIn];
         }
-}
+};
 int main() {
-    Praser praser = new Praser();
-    Code code = new Code();
+    Praser praser;
+    Code code;
+    code.init();
+    bool flag = 0;
+    while(praser.hasMoreCommands()) {
+        if (flag) {
+            cout << "\n";
+        } else flag = 1;
+        string output = "";
+        char commandType = praser.commandType();
+        if (commandType == 'A') {
+            string Avalue = praser.symbol();
+            int AintValue = 0;
+            for (int i = 0; i < Avalue.length(); i++) {
+                AintValue = AintValue * 10 + Avalue[i] - '0';
+            }
+            for (int i = 15; i > 0; i--) {
+                output = output + ((AintValue & 1) ? '1' : '0');
+                AintValue >>= 1;
+            }
+            reverse(output.begin(), output.end());
+            output = "0" + output;
+        } else if (commandType == 'C') {
+            output = "111";
+            output += code.comp(praser.comp());
+            output += code.dest(praser.dest());
+            output += code.jump(praser.jump());
+        }
+        cout << output;
+    }
 }
