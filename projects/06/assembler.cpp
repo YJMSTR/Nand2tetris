@@ -5,14 +5,14 @@ class Praser {
     public:
         string command;
         bool hasMoreCommands() {
-            //ÊäÈëÖĞÊÇ·ñ»¹ÓĞ¸ü¶àÃüÁî
+            //è¾“å…¥ä¸­æ˜¯å¦è¿˜æœ‰æ›´å¤šå‘½ä»¤
             advance();
             if (command == EOF) 
                 return false;
             return true;
         }
         void advance() {
-           //¶ÁÈ¡ÏÂÒ»ÌõÃüÁî ½«Æäµ±×÷¡°µ±Ç°ÃüÁî¡±
+           //è¯»å–ä¸‹ä¸€æ¡å‘½ä»¤ å°†å…¶å½“ä½œâ€œå½“å‰å‘½ä»¤â€
             getline(cin, command);
             if (command == EOF) 
                 return;
@@ -34,7 +34,7 @@ class Praser {
             }
         }
         char commandType() {
-            //·µ»Øµ±Ç°ÃüÁîµÄÀàĞÍ AÖ¸Áî ·µ»Ø'A' CÖ¸Áî·µ»Ø'C' {Xxx}·µ»Ø'L'
+            //è¿”å›å½“å‰å‘½ä»¤çš„ç±»å‹ AæŒ‡ä»¤ è¿”å›'A' CæŒ‡ä»¤è¿”å›'C' {Xxx}è¿”å›'L'
             for (int i = 0; i < command.length(); i++) {
                 if (command[i] != ' ') {
                     return (command[i] == '@' ? 'A' : (command[i] == '{' ? 'L' : 'C'));
@@ -42,8 +42,8 @@ class Praser {
             }
         }
         string symbol() {
-            //·µ»ØĞÎÈç@Xxx »ò{Xxx}µÄµ±Ç°ÃüÁîµÄ·ûºÅ»òÊ®½øÖÆÊıÖµ
-            //½öµ±commandType()ÊÇA
+            //è¿”å›å½¢å¦‚@Xxx æˆ–{Xxx}çš„å½“å‰å‘½ä»¤çš„ç¬¦å·æˆ–åè¿›åˆ¶æ•°å€¼
+            //ä»…å½“commandType()æ˜¯A
             string symbolRes = '';
             for (int i = 0; i < command.length(); i++) {
                 if (command[i] != ' ' && command[i] != '{' && command[i] != '}' && command[i] != '@') {
@@ -53,20 +53,20 @@ class Praser {
             return symbolRes;
         }
         string dest() { 
-            //·µ»Øµ±Ç°CÖ¸ÁîµÄdest
-            //½öµ±commandType()ÊÇCÊ±²ÅÄÜµ÷ÓÃ
+            //è¿”å›å½“å‰CæŒ‡ä»¤çš„dest
+            //ä»…å½“commandType()æ˜¯Cæ—¶æ‰èƒ½è°ƒç”¨
             int cntop = 0;
             string destRes = '';
             for (int i = 0; i < command.length(); i++) {
                 if (command[i] == ';' || command[i] == '=') 
                     cntop++;
                 if (i < command.length() - 1 && command[i] == '/' && command[i+1] == '/') 
-                    break;  //Ö®ºóÈç¹ûÓĞ·ûºÅÒ²ÊÇ×¢ÊÍÀïµÄ
+                    break;  //ä¹‹åå¦‚æœæœ‰ç¬¦å·ä¹Ÿæ˜¯æ³¨é‡Šé‡Œçš„
             }
-            if (cntop < 2)  //Ã»ÓĞdestÓò
+            if (cntop < 2)  //æ²¡æœ‰deståŸŸ
                 return "";  
             else {
-                //Èç¹ûÓĞdestÓò¾ÍÒ»¶¨ÓĞ'=',°Ñ¶Áµ½µÈºÅÖ®Ç°µÄËùÓĞ·Ç¿Õ¸ñ´¦Àí³öÀ´¼´¿É¡£
+                //å¦‚æœæœ‰deståŸŸå°±ä¸€å®šæœ‰'=',æŠŠè¯»åˆ°ç­‰å·ä¹‹å‰çš„æ‰€æœ‰éç©ºæ ¼å¤„ç†å‡ºæ¥å³å¯ã€‚
                 for (int i = 0; i < command.length(); i++) {
                     if (command[i] == '=') 
                         return destRes;
@@ -78,17 +78,17 @@ class Praser {
             return '';
         }
         string comp() {
-            //·µ»Øµ±Ç°CÖ¸ÁîµÄcomp
-            //½öµ±commandType()ÊÇCÊ±²ÅÄÜµ÷ÓÃ
+            //è¿”å›å½“å‰CæŒ‡ä»¤çš„comp
+            //ä»…å½“commandType()æ˜¯Cæ—¶æ‰èƒ½è°ƒç”¨
             int cntop = 0;
             string compRes = '';
             for (int i = 0; i < command.length(); i++) {
                 if (command[i] == ';' || command[i] == '=') 
                     cntop++;
                 if (i < command.length() - 1 && command[i] == '/' && command[i+1] == '/') 
-                    break;  //Ö®ºóÈç¹ûÓĞ·ûºÅÒ²ÊÇ×¢ÊÍÀïµÄ
+                    break;  //ä¹‹åå¦‚æœæœ‰ç¬¦å·ä¹Ÿæ˜¯æ³¨é‡Šé‡Œçš„
             }
-            if (cntop < 2)  //Ã»ÓĞcompÓò
+            if (cntop < 2)  //æ²¡æœ‰compåŸŸ
                 return "";  
             bool isComp = false;
             else {
@@ -96,7 +96,7 @@ class Praser {
                     if (command[i] == '=') {
                         isComp = true;
                     }
-                    if (isComp && command[i] == ';')    //×¢ÊÍÖ»»áÔÚĞĞÄ© ²»»á±»¶Áµ½
+                    if (isComp && command[i] == ';')    //æ³¨é‡Šåªä¼šåœ¨è¡Œæœ« ä¸ä¼šè¢«è¯»åˆ°
                         return compRes;
                     if (isComp && command[i] != ' ' && command[i] != '=') {
                         compRes += command[i];
@@ -106,21 +106,21 @@ class Praser {
             return '';
         }
         string jump() {
-            //·µ»Øµ±Ç°CÖ¸ÁîµÄjump
-            //½öµ±commandType()ÊÇCÊ±²ÅÄÜµ÷ÓÃ
-            //jump¶ÁÈëÊ±ÒªÊ¶±ğÒ»ÏÂ×¢ÊÍ
+            //è¿”å›å½“å‰CæŒ‡ä»¤çš„jump
+            //ä»…å½“commandType()æ˜¯Cæ—¶æ‰èƒ½è°ƒç”¨
+            //jumpè¯»å…¥æ—¶è¦è¯†åˆ«ä¸€ä¸‹æ³¨é‡Š
             int cntop = 0;
             string jumpRes = '';
             for (int i = 0; i < command.length(); i++) {
                 if (command[i] == ';' || command[i] == '=') 
                     cntop++;
                 if (i < command.length() - 1 && command[i] == '/' && command[i+1] == '/') 
-                    break;  //Ö®ºóÈç¹ûÓĞ·ûºÅÒ²ÊÇ×¢ÊÍÀïµÄ
+                    break;  //ä¹‹åå¦‚æœæœ‰ç¬¦å·ä¹Ÿæ˜¯æ³¨é‡Šé‡Œçš„
             }
-            if (cntop == 2)  //Ã»ÓĞjump
+            if (cntop == 2)  //æ²¡æœ‰jump
                 return "";  
             if (cntop == 1) {
-                //Ö»ÓĞjump
+                //åªæœ‰jump
                 for (int i = 0; i < command.length(); i++) {
                     if (command[i] == ';') 
                         return jumpRes;
@@ -150,7 +150,7 @@ class Code {
     private:
         map<string, string> destRes, compRes, jumpRes;
     public:
-        //×¢Òâ±éÀúÕâ¸ömapµÄÊ±ºòÒªÓÃÒıÓÃÒÔÃâ¸´ÖÆÒ»±é
+        //æ³¨æ„éå†è¿™ä¸ªmapçš„æ—¶å€™è¦ç”¨å¼•ç”¨ä»¥å…å¤åˆ¶ä¸€é
         void init() {
             destRes[""] = "000";
             destRes["M"] = "001";
@@ -198,11 +198,11 @@ class Code {
             jumpRes["JMP"] = "111";
         }
         string dest(string destIn) {
-            //·µ»Ødest¶ÔÓ¦µÄ3Î»¶ş½øÖÆÂë
+            //è¿”å›destå¯¹åº”çš„3ä½äºŒè¿›åˆ¶ç 
             return destRes[destIn];
         }
         string comp(string compIn) {
-            //·µ»Øcomp¶ÔÓ¦µÄ7Î»¶ş½øÖÆÂë
+            //è¿”å›compå¯¹åº”çš„7ä½äºŒè¿›åˆ¶ç 
             return compRes[compIn];
         }
         string jump(string jumpIn) {
